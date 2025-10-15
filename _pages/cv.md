@@ -42,12 +42,6 @@ Skills
 * Data Science Tools: NumPy, Pandas, scikit-learn  
 * Research Topics: Information Retrieval, Recommender Systems, Flow-based Model
 
-Teaching & Mentoring
-======
-<ul>{% for post in site.teaching reversed %}
-  {% include archive-single-cv.html %}
-{% endfor %}</ul>
-
 Service and Leadership
 ======
 * Active member of the MIC Lab reading group  
