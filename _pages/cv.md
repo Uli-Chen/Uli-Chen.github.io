@@ -11,7 +11,7 @@ redirect_from:
 
 Education
 ======
-* B.Eng. in Computer Science and Technology, **Jilin University**, 2023–Present  
+* B.Sc. in Computer Science and Technology, **Jilin University**, 2023–Present  
   * Junior undergraduate student  
   * Research at **MIC Lab** under the supervision of **Associate Professor Yuanbo Xu**  
   * Focus: Information Retrieval, Data Mining, Recommender Systems
