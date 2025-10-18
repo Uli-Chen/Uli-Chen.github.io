@@ -1,0 +1,139 @@
+---
+title: "An Introduction to Flow Models and Diffusion Models 1"
+date: 2025-10-18
+permalink: /posts/2025/10/blog-post-1/
+tags:
+  - Flow Models 
+  - Diffusion Models
+---
+
+This post serves as the first entry in a series introcuding Flow Matching and Diffusion Models, potentially spanning a broad range of related topics as I expand upon areas of personal and research interest.  
+Special credits to [MIT](https://diffusion.csail.mit.edu/).
+
+# Flow and Diffusion Models
+
+## Flow Models
+
+What is flow? Flow in flow-based generative models refers to the series of invertible and differentiable transformations (functions) used to map data points from a simple base distribution $p_{base}$ to a complex target distribution $p_{target}$, or vice versa.  
+The core idea is to transfrom a simple probability density function (PDF) into a complex one using the change of variables formula from probability theory.  
+Here we provide the formal definition of flow:
+A function called the flow is the solution to the ODE
+
+$$
+\begin{align}
+\phi:\mathbb{R}^d \times [0,1] \mapsto \mathbb{R}^d, \quad (x_0, t)\mapsto \phi_t(x_0) \\
+\frac{\text{d}}{\text{d}t}\phi_t(x_0) = u_t(\phi_t(x_0)) \quad \triangleright \text{flow ODE} \\
+\phi_0(x_0) = x_0 \quad \triangleright \text{flow initial conditions}
+\end{align}
+$$
+
+> **Theorem 1 (Flow existence and uniqueness):**
+> If vector field $u_t$ is continuously differentiable with a bounded derivative, the the ODE has a unique solution given by a flow $\phi_t$. In this case, $\phi_t$ is a diffeomorphism for all $t$, i.e. $\phi_t$ is continuously differentiable with a continuously differentiable inverse \phi_t^{-1}.
+> _Just remember flows exists and are unique solutions to ODEs in our cases of interest._
+
+### Simulating an ODE.
+In many cases, it is impossible to compute the flow $\phi_t$ explicitly if $u_t$ is complicated. A simple alternate is to use numerical methods to simulate ODEs. One of the most intuitive methods is the Euler method. After initialize with $X_0 = x_0$, we update via
+
+$$
+\begin{equation}
+  X_{t+h} = X_t + hu_t(X_t) \quad (t=0,h,2h,\cdots ,1-h)
+\end{equation}
+$$
+
+where $h = n^-1$ is the step size hyperparameter.
+
+A more sophisticated method is Heun's method
+
+$$
+\begin{align}
+  X^1_{t+h} = X_t+hu_t(X_0) \quad \triangleright \text{predictor step}\\
+  X_{t+h} = X_t + h/2(u_t(X_t)+u_{t+h}(X^1_{t+h})) \quad \triangleright \text{corrector step}
+\end{align}
+$$
+The neum's method average the _speed_ at the initial point $u_t(X_t)$ and the _speed_ at predicted point (by Euler method) $u_{t+h}(X^1_{t+h})$ to obtain a more precise approximation.
+
+### Flow models
+Our goal is to convert $p_{init}$ to $p_{target}$. The simulation of an ODE is thus a natural choice for this transformation. A flow model is described by the ODE
+
+$$
+\begin{align}
+  X_0 \sim p_{init} \\
+  \frac{\text{d}}{\text{d}t}X_t = u_{t}^{\theta}(X_t)
+\end{align}
+$$
+where $u_t$ is the vector field given by neural network with parameters $\theta$. Our goal is to mek the endpoint $X_1$ the trajectory have distribution $p_data$, i.e.
+$$
+\begin{equation}
+  X_0 \sim p_{init} \Leftrightarrow \phi_1^\theta(X_0) \sim p_{target}
+\end{equation}
+$$
+
+### Diffusion models
+
+**Brownian Motion**
+A Brownian motion $W = (W_t)_{0 \leq t \leq 1}$ is a stochastic process such that $W_0 = 0$, and the following two conditions hold:
+
+- Normal increments: $W_t - W_s \sim \mathcal{N} (0, (t-s)I_d)$
+- Independent increments: $W_{t_1}-W_{t_0}, \cdots, W_{t_n}-W_{t_{n-1}}$ are independent random variables
+
+**Simulation of Brownian Motion**
+$$
+\begin{equation}
+  W_{t+h} = W_t + \sqrt{h}\epsilon_t, \quad \epsilon_t \sim \mathcal{N}(0, I_d) \quad (t=0,h,\cdots,1-h)
+\end{equation}
+$$
+
+**From ODEs to SDEs**
+Why SDE? The idea of a SDE is to extend the deterministic dynamics of an ODE to model the randomness, which is important for the variety of samples generation.
+Lets consider the equicalent formulation of ODEs that does not use derivatives.
+$$
+\begin{equation}
+  \frac{\text{d}}{\text{d}t} X_t = u_t(X_t) \Leftrightarrow \\
+\frac{1}{h} (X_{t+h} - X_t) + R_t(h) \Leftrightarrow \\
+X_{t+h} = X_t + hu_t(X+t) + hR_t(h)
+\end{equation}
+$$
+A trajectory of a SDE is the trajectory of an ODE plus the Brownian motion:
+$$
+\begin{equation}
+  X_{t+h} = X_t + \underbrace{h u_t(X_t)}_{\text{deterministic}} + \underbrace{\sigma_t (W_{t+h} - W_t)}_{\text{stochastic}} + \underbrace{h R_t(h)}_{\text{error term}}
+\end{equation}
+$$
+where $\sigma_t \geq 0$ describes the diffusion coefficient and $R_t(h)$ describes a stochastic error term such that the standard deviation $\mathbb{E}[||R||^2]^\frac{1}{2} \rightarrow 0$ goes to zero for $h \rightarrow 0$. Here we draw the formal definition:
+$$
+\begin{align}
+  \text{d}X_t = u_t(X_t)\text{d}t + \sigma_t \text{d}W_t \\
+  X_0 = x_0
+  \end{align}
+$$
+
+### Simulating a SDE (Euler-Maruyama method)
+Similar to Euler method, we add scaled Gaussian noise here
+$$
+\begin{equation}
+  X_{t+h} = X_t + hu_t(X_t) + \sqrt{h}\sigma_t\epsilon_t, \quad \epsilon_t \sim \mathcal{N}(0, I_d)
+\end{equation}
+$$
+
+### Diffusion Model
+A diffusion model is thus given by
+$$
+\begin{equation}
+  \text{d}X_t = u_t^\theta(X_t)\text{d}t + \sigma_t\text{d}W_t
+X_0 \sim p_{init}
+\end{equation}
+$$
+where the vector field $u_t^\theta$ is given by neural network.
+
+## Recap
+In this blog, we introduce the concept of
+
+- Vector Field
+- Flow
+- ODE
+- Flow Model
+- Brownian Motion
+- SDE
+- Diffusion Model
+
+In next blog, I plan to introduce how to construct the training target. Hope you find this blog helpful. Contact me via email if you find any problems.
