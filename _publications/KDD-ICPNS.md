@@ -3,9 +3,9 @@ title: "Towards Reliable Negative Sampling for Recommendation with Implicit Feed
 collection: publications
 category: manuscripts
 permalink: /publication/ICPNS
-excerpt: "Submitted to KDD'26, under review."
+excerpt: "Submitted to KDD'26."
 date: 2026-02-09
-venue: "KDD"
+# venue: "KDD"
 slidesurl: "http://academicpages.github.io/files/slides1.pdf"
 paperurl: "http://academicpages.github.io/files/paper1.pdf"
 bibtexurl: "http://academicpages.github.io/files/bibtex1.bib"
