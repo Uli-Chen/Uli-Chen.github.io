@@ -1,7 +1,7 @@
 ---
 title: "Attention"
 date: 2026-3-1
-permalink: /posts/llm/attention
+permalink: /posts/llm/attention/
 tags:
   - Large Language Model
   - Embedding
