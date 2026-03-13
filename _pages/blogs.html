@@ -22,33 +22,22 @@ author_profile: true
 
 <div class="topic-list">
   {% for tag in ordered_topics %}
-    {%- comment -%} Count posts whose first tag == this topic {%- endcomment -%}
     {% assign count = 0 %}
     {% for post in site.posts %}
       {% assign ft = post.tags | first %}
-      {% if ft == tag %}
-        {% assign count = count | plus: 1 %}
-      {% endif %}
+      {% if ft == tag %}{% assign count = count | plus: 1 %}{% endif %}
     {% endfor %}
 
-    {%- comment -%} Look up description from topics.yml {%- endcomment -%}
     {% assign topic_meta = nil %}
     {% for t in site.data.topics %}
       {% if t.tag == tag %}{% assign topic_meta = t %}{% endif %}
     {% endfor %}
 
     {% assign tag_slug = tag | slugify %}
-    <a class="topic-row" href="{{ base_path }}/topic/{{ tag_slug }}/">
-      <div class="topic-row__main">
-        <span class="topic-row__name">{{ tag }}</span>
-        {% if topic_meta and topic_meta.description %}
-          <span class="topic-row__desc">{{ topic_meta.description }}</span>
-        {% endif %}
-      </div>
-      <span class="topic-row__count">
-        {{ count }}&nbsp;{% if count == 1 %}post{% else %}posts{% endif %}
-      </span>
-      <span class="topic-row__arrow">&#8594;</span>
+    <a class="topic-post-item" href="{{ base_path }}/tags/#{{ tag_slug }}">
+      <span class="topic-post-item__meta">{{ count }}&nbsp;{% if count == 1 %}post{% else %}posts{% endif %}</span>
+      <span class="topic-post-item__title">{{ tag }}</span>
+      <span class="topic-post-item__arrow"><i class="fas fa-chevron-right" aria-hidden="true"></i></span>
     </a>
   {% endfor %}
 </div>

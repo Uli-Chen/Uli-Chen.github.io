@@ -8,35 +8,88 @@ author_profile: true
 {% include base_path %}
 {% include group-by-array collection=site.posts field="tags" %}
 
-<p class="topic-back"><a href="{{ base_path }}/blogs/"><i class="fas fa-arrow-left" aria-hidden="true"></i> All Topics</a></p>
+{%- comment -%}
+  Build a map: first-tag → posts (only posts whose FIRST tag == this tag).
+  We iterate over unique first-tags and collect matching posts.
+{%- endcomment -%}
+{% assign seen_first_tags = "" | split: "|" %}
+{% assign first_tag_list  = "" | split: "|" %}
+{% for post in site.posts reversed %}
+  {% assign ft = post.tags | first %}
+  {% if ft and ft != "" %}
+    {% unless seen_first_tags contains ft %}
+      {% assign seen_first_tags = seen_first_tags | push: ft %}
+      {% assign first_tag_list  = first_tag_list  | push: ft %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
 
-{% for tag in group_names %}
-  {% assign posts = group_items[forloop.index0] %}
+<p class="topic-back" id="topic-back-link" style="display:none;">
+  <a href="{{ base_path }}/blogs/"><i class="fas fa-arrow-left" aria-hidden="true"></i> All Topics</a>
+</p>
+
+{% for tag in first_tag_list %}
   {% assign tag_slug = tag | slugify %}
 
-  <section class="topic-section" id="{{ tag_slug }}">
+  {%- comment -%} Gather posts whose first tag == tag {%- endcomment -%}
+  {% assign topic_posts = "" | split: "|" %}
+  {% for post in site.posts reversed %}
+    {% assign ft = post.tags | first %}
+    {% if ft == tag %}
+      {% assign topic_posts = topic_posts | push: post %}
+    {% endif %}
+  {% endfor %}
+
+  <section class="topic-section" id="{{ tag_slug }}" data-topic="true">
     <h2 class="topic-section__heading">
-      {% assign topic_meta = nil %}
-      {% for t in site.data.topics %}
-        {% if t.tag == tag %}{% assign topic_meta = t %}{% endif %}
-      {% endfor %}
-      {% if topic_meta and topic_meta.icon %}<i class="{{ topic_meta.icon }}" aria-hidden="true"></i> {% endif %}
       {{ tag }}
-      <span class="topic-section__count">{{ posts | size }} {{ posts.size | pluralize: "post", "posts" }}</span>
+      <span class="topic-section__count">{{ topic_posts.size }}&nbsp;{% if topic_posts.size == 1 %}post{% else %}posts{% endif %}</span>
     </h2>
 
     <div class="topic-post-list">
-      {% assign sorted_posts = posts | sort: "date" | reverse %}
-      {% for post in sorted_posts %}
+      {% for post in topic_posts %}
         <a class="topic-post-item" href="{{ base_path }}{{ post.url }}">
-          <div class="topic-post-item__meta">
-            <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %d, %Y" }}</time>
-          </div>
-          <div class="topic-post-item__title">{{ post.title }}</div>
+          <time class="topic-post-item__meta" datetime="{{ post.date | date_to_xmlschema }}">
+            {{ post.date | date: "%b %d, %Y" }}
+          </time>
+          <span class="topic-post-item__title">{{ post.title }}</span>
           <span class="topic-post-item__arrow"><i class="fas fa-chevron-right" aria-hidden="true"></i></span>
         </a>
       {% endfor %}
     </div>
   </section>
-
 {% endfor %}
+
+<script>
+(function () {
+  function applyHash() {
+    var hash = window.location.hash.replace('#', '');
+    var sections = document.querySelectorAll('[data-topic="true"]');
+    var backLink = document.getElementById('topic-back-link');
+
+    if (!hash) {
+      // No hash — show all sections
+      sections.forEach(function (s) { s.style.display = ''; });
+      if (backLink) backLink.style.display = 'none';
+      return;
+    }
+
+    var matched = false;
+    sections.forEach(function (s) {
+      if (s.id === hash) {
+        s.style.display = '';
+        matched = true;
+      } else {
+        s.style.display = 'none';
+      }
+    });
+
+    // Show back link only when filtering to a single topic
+    if (backLink) backLink.style.display = matched ? '' : 'none';
+  }
+
+  // Run on load and on hash change (browser back/forward)
+  applyHash();
+  window.addEventListener('hashchange', applyHash);
+})();
+</script>
