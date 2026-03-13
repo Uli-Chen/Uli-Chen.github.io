@@ -11,7 +11,7 @@ slidesurl: "http://academicpages.github.io/files/slides1.pdf"
 paperurl: "https://arxiv.org/abs/2602.18745"
 bibtexurl: "http://academicpages.github.io/files/bibtex1.bib"
 githuburl: ""
-image: "images/geocode.jpg"
+image: "/images/geocode.jpg"
 # citation: ""
 ---
 
