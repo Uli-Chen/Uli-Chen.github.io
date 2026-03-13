@@ -5,13 +5,13 @@ category: manuscripts
 permalink: /publication/GeoCode
 excerpt: "Submitted to ICML'26."
 date: 2026-01-21
-authors: "Ulysses Chen, Author Two, Author Three"
-# venue: "KDD"
+authors: "Haobo Lin, Tianyi Bai, Chen Chen"
+#venue: "ICML"
 slidesurl: "http://academicpages.github.io/files/slides1.pdf"
-paperurl: "http://academicpages.github.io/files/paper1.pdf"
+paperurl: "https://arxiv.org/abs/2602.18745"
 bibtexurl: "http://academicpages.github.io/files/bibtex1.bib"
 githuburl: ""
-image: ""
+image: "iamges/geocode.jpg"
 # citation: ""
 ---
 

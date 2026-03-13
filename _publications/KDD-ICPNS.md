@@ -8,10 +8,10 @@ date: 2026-02-09
 authors: "Chen Chen, Haobo Lin, Yuanbo Xu"
 # venue: "KDD"
 slidesurl: "http://academicpages.github.io/files/slides1.pdf"
-paperurl: "http://academicpages.github.io/files/paper1.pdf"
+paperurl: "https://arxiv.org/abs/2602.18759v1"
 bibtexurl: "http://academicpages.github.io/files/bibtex1.bib"
 githuburl: ""
-image: "/images/icpns.png"
+image: "/images/icpns.jpg"
 # citation: ""
 ---
 
