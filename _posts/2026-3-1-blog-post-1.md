@@ -67,3 +67,4 @@ Continuous Bag-of-Words (CBOW) is a word2vec model that predicts a target token 
 
 In natural language, if we have one target token, we can randomly sample some tokens to be the negative samples. Then we maximize the differences between the target token and the negative samples. This method is similar to the BPR-loss widely adopted in recommender systems.
 
+![negative sampling](/images/icpns.jpg)
