@@ -1,0 +1,48 @@
+---
+layout: archive
+title: "Blog Posts"
+permalink: /blogs/
+author_profile: true
+---
+
+{% include base_path %}
+{% include group-by-array collection=site.posts field="tags" %}
+
+<p class="topic-intro">Select a topic below to browse related posts.</p>
+
+<div class="topic-grid">
+  {% for tag in group_names %}
+    {% assign posts = group_items[forloop.index0] %}
+    {% assign tag_slug = tag | slugify %}
+
+    {%- comment -%} Look up topic metadata from _data/topics.yml {%- endcomment -%}
+    {% assign topic_meta = nil %}
+    {% for t in site.data.topics %}
+      {% if t.tag == tag %}
+        {% assign topic_meta = t %}
+      {% endif %}
+    {% endfor %}
+
+    <a class="topic-card" href="{{ base_path }}/tags/#{{ tag_slug }}">
+      <div class="topic-card__icon">
+        {% if topic_meta and topic_meta.icon %}
+          <i class="{{ topic_meta.icon }}" aria-hidden="true"></i>
+        {% else %}
+          <i class="fas fa-bookmark" aria-hidden="true"></i>
+        {% endif %}
+      </div>
+      <div class="topic-card__body">
+        <h2 class="topic-card__title">{{ tag }}</h2>
+        {% if topic_meta and topic_meta.description %}
+          <p class="topic-card__desc">{{ topic_meta.description }}</p>
+        {% endif %}
+        <p class="topic-card__count">
+          {{ posts | size }}
+          {% if posts.size == 1 %}post{% else %}posts{% endif %}
+        </p>
+      </div>
+      <span class="topic-card__arrow"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+    </a>
+
+  {% endfor %}
+</div>

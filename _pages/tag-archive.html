@@ -1,17 +1,42 @@
 ---
 layout: archive
 permalink: /tags/
-title: "Posts by Tags"
+title: "Posts by Topic"
 author_profile: true
 ---
 
 {% include base_path %}
 {% include group-by-array collection=site.posts field="tags" %}
 
+<p class="topic-back"><a href="{{ base_path }}/blogs/"><i class="fas fa-arrow-left" aria-hidden="true"></i> All Topics</a></p>
+
 {% for tag in group_names %}
   {% assign posts = group_items[forloop.index0] %}
-  <h2 id="{{ tag | slugify }}" class="archive__subtitle">{{ tag }}</h2>
-  {% for post in posts %}
-    {% include archive-single.html %}
-  {% endfor %}
+  {% assign tag_slug = tag | slugify %}
+
+  <section class="topic-section" id="{{ tag_slug }}">
+    <h2 class="topic-section__heading">
+      {% assign topic_meta = nil %}
+      {% for t in site.data.topics %}
+        {% if t.tag == tag %}{% assign topic_meta = t %}{% endif %}
+      {% endfor %}
+      {% if topic_meta and topic_meta.icon %}<i class="{{ topic_meta.icon }}" aria-hidden="true"></i> {% endif %}
+      {{ tag }}
+      <span class="topic-section__count">{{ posts | size }} {{ posts.size | pluralize: "post", "posts" }}</span>
+    </h2>
+
+    <div class="topic-post-list">
+      {% assign sorted_posts = posts | sort: "date" | reverse %}
+      {% for post in sorted_posts %}
+        <a class="topic-post-item" href="{{ base_path }}{{ post.url }}">
+          <div class="topic-post-item__meta">
+            <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %d, %Y" }}</time>
+          </div>
+          <div class="topic-post-item__title">{{ post.title }}</div>
+          <span class="topic-post-item__arrow"><i class="fas fa-chevron-right" aria-hidden="true"></i></span>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
 {% endfor %}

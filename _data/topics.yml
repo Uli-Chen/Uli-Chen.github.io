@@ -1,0 +1,19 @@
+# Topic metadata for Blog Posts page
+# Each entry maps a tag name to icon and description.
+# Add or edit entries here to match your post tags.
+
+- tag: "Flow Models"
+  icon: "fas fa-wave-square"
+  description: "Flow-based generative models, normalizing flows, and flow matching theory."
+
+- tag: "Diffusion Models"
+  icon: "fas fa-cloud"
+  description: "Score-based and denoising diffusion probabilistic models for generation."
+
+- tag: "Large Language Model"
+  icon: "fas fa-brain"
+  description: "Architecture, training, and applications of large language models."
+
+- tag: "CUDA"
+  icon: "fas fa-microchip"
+  description: "GPU parallel programming with CUDA for high-performance computing."
