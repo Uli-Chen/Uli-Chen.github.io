@@ -6,43 +6,49 @@ author_profile: true
 ---
 
 {% include base_path %}
-{% include group-by-array collection=site.posts field="tags" %}
 
-<p class="topic-intro">Select a topic below to browse related posts.</p>
+{%- comment -%} Collect unique first-tags in order of first appearance {%- endcomment -%}
+{% assign seen_topics = "" | split: "|" %}
+{% assign ordered_topics = "" | split: "|" %}
+{% for post in site.posts reversed %}
+  {% assign ft = post.tags | first %}
+  {% if ft and ft != "" %}
+    {% unless seen_topics contains ft %}
+      {% assign seen_topics = seen_topics | push: ft %}
+      {% assign ordered_topics = ordered_topics | push: ft %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
 
-<div class="topic-grid">
-  {% for tag in group_names %}
-    {% assign posts = group_items[forloop.index0] %}
-    {% assign tag_slug = tag | slugify %}
-
-    {%- comment -%} Look up topic metadata from _data/topics.yml {%- endcomment -%}
-    {% assign topic_meta = nil %}
-    {% for t in site.data.topics %}
-      {% if t.tag == tag %}
-        {% assign topic_meta = t %}
+<div class="topic-list">
+  {% for tag in ordered_topics %}
+    {%- comment -%} Count posts whose first tag == this topic {%- endcomment -%}
+    {% assign count = 0 %}
+    {% for post in site.posts %}
+      {% assign ft = post.tags | first %}
+      {% if ft == tag %}
+        {% assign count = count | plus: 1 %}
       {% endif %}
     {% endfor %}
 
-    <a class="topic-card" href="{{ base_path }}/tags/#{{ tag_slug }}">
-      <div class="topic-card__icon">
-        {% if topic_meta and topic_meta.icon %}
-          <i class="{{ topic_meta.icon }}" aria-hidden="true"></i>
-        {% else %}
-          <i class="fas fa-bookmark" aria-hidden="true"></i>
-        {% endif %}
-      </div>
-      <div class="topic-card__body">
-        <h2 class="topic-card__title">{{ tag }}</h2>
-        {% if topic_meta and topic_meta.description %}
-          <p class="topic-card__desc">{{ topic_meta.description }}</p>
-        {% endif %}
-        <p class="topic-card__count">
-          {{ posts | size }}
-          {% if posts.size == 1 %}post{% else %}posts{% endif %}
-        </p>
-      </div>
-      <span class="topic-card__arrow"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-    </a>
+    {%- comment -%} Look up description from topics.yml {%- endcomment -%}
+    {% assign topic_meta = nil %}
+    {% for t in site.data.topics %}
+      {% if t.tag == tag %}{% assign topic_meta = t %}{% endif %}
+    {% endfor %}
 
+    {% assign tag_slug = tag | slugify %}
+    <a class="topic-row" href="{{ base_path }}/topic/{{ tag_slug }}/">
+      <div class="topic-row__main">
+        <span class="topic-row__name">{{ tag }}</span>
+        {% if topic_meta and topic_meta.description %}
+          <span class="topic-row__desc">{{ topic_meta.description }}</span>
+        {% endif %}
+      </div>
+      <span class="topic-row__count">
+        {{ count }}&nbsp;{% if count == 1 %}post{% else %}posts{% endif %}
+      </span>
+      <span class="topic-row__arrow">&#8594;</span>
+    </a>
   {% endfor %}
 </div>

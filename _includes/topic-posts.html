@@ -1,0 +1,30 @@
+{% comment %}
+  Reusable include: renders a post list filtered to posts whose first tag == include.tag
+  Usage: {% include topic-posts.html tag="Flow Models" %}
+{% endcomment %}
+{% assign target_tag = include.tag %}
+{% include base_path %}
+
+<p class="topic-back">
+  <a href="{{ base_path }}/blogs/"><i class="fas fa-arrow-left" aria-hidden="true"></i> All Topics</a>
+</p>
+
+<div class="topic-post-list">
+  {% assign has_posts = false %}
+  {% for post in site.posts reversed %}
+    {% assign ft = post.tags | first %}
+    {% if ft == target_tag %}
+      {% assign has_posts = true %}
+      <a class="topic-post-item" href="{{ base_path }}{{ post.url }}">
+        <time class="topic-post-item__meta" datetime="{{ post.date | date_to_xmlschema }}">
+          {{ post.date | date: "%b %d, %Y" }}
+        </time>
+        <span class="topic-post-item__title">{{ post.title }}</span>
+        <span class="topic-post-item__arrow"><i class="fas fa-chevron-right" aria-hidden="true"></i></span>
+      </a>
+    {% endif %}
+  {% endfor %}
+  {% unless has_posts %}
+    <p class="topic-empty">No posts yet in this topic.</p>
+  {% endunless %}
+</div>
