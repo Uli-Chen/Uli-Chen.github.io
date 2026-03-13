@@ -5,10 +5,13 @@ category: manuscripts
 permalink: /publication/ICPNS
 excerpt: "Submitted to KDD'26."
 date: 2026-02-09
+authors: "Ulysses Chen, Author Two, Author Three"
 # venue: "KDD"
 slidesurl: "http://academicpages.github.io/files/slides1.pdf"
 paperurl: "http://academicpages.github.io/files/paper1.pdf"
 bibtexurl: "http://academicpages.github.io/files/bibtex1.bib"
+githuburl: ""
+image: ""
 # citation: ""
 ---
 

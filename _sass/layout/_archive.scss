@@ -243,3 +243,191 @@
     }
   }
 }
+
+
+/* ==========================================================================
+   PUBLICATION CARDS
+   ========================================================================== */
+
+.pub-card {
+  margin-bottom: 2em;
+  padding-bottom: 2em;
+  border-bottom: 1px solid var(--global-border-color);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.pub-card__inner {
+  display: flex;
+  gap: 1.5em;
+  align-items: flex-start;
+}
+
+/* ── Image column ── */
+.pub-card__image {
+  flex: 0 0 200px;
+  width: 200px;
+  min-width: 0;
+  border-radius: $border-radius;
+  overflow: hidden;
+  background-color: var(--global-code-background-color);
+  border: 1px solid var(--global-border-color);
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: $global-transition;
+  }
+
+  &:hover img {
+    transform: scale(1.03);
+  }
+
+  &--placeholder {
+    background: linear-gradient(135deg, var(--global-code-background-color) 0%, var(--global-border-color) 100%);
+  }
+}
+
+.pub-card__placeholder-icon {
+  font-size: 2.5em;
+  color: var(--global-text-color-light);
+  opacity: 0.5;
+}
+
+/* ── Body column ── */
+.pub-card__body {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+
+/* Venue / submission status */
+.pub-card__venue {
+  margin: 0;
+  font-size: $type-size-7;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--global-link-color);
+
+  i {
+    margin-right: 0.35em;
+    font-size: 0.9em;
+  }
+}
+
+/* Title */
+.pub-card__title {
+  margin: 0 0 0.15em;
+  font-size: $type-size-5;
+  line-height: 1.35;
+  font-family: $header-font-family;
+  font-weight: 700;
+
+  a {
+    color: var(--global-text-color);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--global-link-color);
+      text-decoration: none;
+    }
+  }
+}
+
+/* Authors */
+.pub-card__authors {
+  margin: 0;
+  font-size: $type-size-6;
+  color: var(--global-text-color-light);
+  font-style: italic;
+
+  i {
+    margin-right: 0.35em;
+    font-size: 0.9em;
+    font-style: normal;
+  }
+}
+
+/* Link buttons row */
+.pub-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-top: 0.6em;
+}
+
+.pub-card__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.3em 0.85em;
+  border-radius: 2em;
+  font-size: $type-size-7;
+  font-weight: 600;
+  text-decoration: none !important;
+  border: 1.5px solid transparent;
+  transition: $global-transition;
+  cursor: pointer;
+
+  i { font-size: 0.95em; }
+
+  &--paper {
+    background: var(--global-link-color);
+    color: #fff !important;
+    border-color: var(--global-link-color);
+
+    &:hover {
+      background: var(--global-link-color-hover);
+      border-color: var(--global-link-color-hover);
+      color: #fff !important;
+    }
+  }
+
+  &--github {
+    background: transparent;
+    color: var(--global-text-color) !important;
+    border-color: var(--global-dark-border-color);
+
+    &:hover {
+      background: var(--global-link-color);
+      border-color: var(--global-link-color);
+      color: #fff !important;
+    }
+  }
+
+  &--bibtex {
+    background: transparent;
+    color: var(--global-text-color) !important;
+    border-color: var(--global-dark-border-color);
+
+    &:hover {
+      background: var(--global-link-color);
+      border-color: var(--global-link-color);
+      color: #fff !important;
+    }
+  }
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 600px) {
+  .pub-card__inner {
+    flex-direction: column;
+  }
+
+  .pub-card__image {
+    flex: none;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+}
